@@ -1,13 +1,16 @@
-import express, { json } from "express";
-import mongoose from "mongoose";
-import router from "./routes.js";
-const app = express();
-app.use(json());
+const express = require("express");
+const mongoose = require("mongoose");
+const routes = require("./routes");
 
-mongoose.connect("mongodb://0.0.0.0:27017/acmedb").then(() => {
-  app.use(express.json());
-  app.use("/api", router);
-  app.listen(5000, () => {
-    console.log("Server is running on Port:5000");
+mongoose
+  .connect("mongodb://0.0.0.0:27017/acmedb", { useNewUrlParser: true })
+  .then(() => {
+    const app = express();
+    app.use(express.json());
+
+    app.use("/api", routes);
+
+    app.listen(5000, () => {
+      console.log("Server has started!");
+    });
   });
-});

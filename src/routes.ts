@@ -1,13 +1,13 @@
-const express = require("express");
-const Post = require("./models/Post"); // new
+import express, { Request, Response } from "express";
+import Post from "./models/Post";
 const router = express.Router();
 
 // Get all posts
-router.get("/posts", async (req, res) => {
+router.get("/posts", async (req: Request, res: Response) => {
   const posts = await Post.find();
   res.send(posts);
 });
-router.post("/posts", async (req, res) => {
+router.post("/posts", async (req: Request, res: Response) => {
   const post = new Post({
     title: req.body.title,
     content: req.body.content,
@@ -15,11 +15,11 @@ router.post("/posts", async (req, res) => {
   await post.save();
   res.send(post);
 });
-router.get("/posts/:id", async (req, res) => {
+router.get("/posts/:id", async (req: Request, res: Response) => {
   const post = await Post.findOne({ _id: req.params.id });
   res.send(post);
 });
-router.get("/posts/:id", async (req, res) => {
+router.get("/posts/:id", async (req: Request, res: Response) => {
   try {
     const post = await Post.findOne({ _id: req.params.id });
     res.send(post);
@@ -28,9 +28,15 @@ router.get("/posts/:id", async (req, res) => {
     res.send({ error: "Post doesn't exist!" });
   }
 });
-router.patch("/posts/:id", async (req, res) => {
+router.patch("/posts/:id", async (req: Request, res: Response) => {
   try {
     const post = await Post.findOne({ _id: req.params.id });
+
+    if (!post) {
+      res.status(404);
+      res.send({ error: "Post doesn't exist!" });
+      return;
+    }
 
     if (req.body.title) {
       post.title = req.body.title;
@@ -42,13 +48,13 @@ router.patch("/posts/:id", async (req, res) => {
 
     await post.save();
     res.send(post);
-  } catch {
-    res.status(404);
-    res.send({ error: "Post doesn't exist!" });
+  } catch (error) {
+    res.status(500);
+    res.send({ error: "An error occurred while updating the post." });
   }
 });
 
-router.delete("/posts/:id", async (req, res) => {
+router.delete("/posts/:id", async (req: Request, res: Response) => {
   try {
     await Post.deleteOne({ _id: req.params.id });
     res.status(204).send();
@@ -58,4 +64,4 @@ router.delete("/posts/:id", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
