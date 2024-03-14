@@ -3,10 +3,11 @@ import {
   httpGetQueries,
   httpPostQueries,
 } from "../controllers/query.controllers";
+import isqueryvalid from "../middlewares/queryMiddleware";
 
 const queryRouter = express.Router();
 
 queryRouter.get("/", httpGetQueries);
-queryRouter.post("/", httpPostQueries);
+queryRouter.post("/", isqueryvalid, httpPostQueries);
 
 export default queryRouter;
