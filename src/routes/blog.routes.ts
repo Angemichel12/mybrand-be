@@ -6,6 +6,10 @@ import {
   httpGetSingleBlog,
   httpUpdateBlog,
 } from "../controllers/blog.controllers";
+import {
+  httpGetComment,
+  httpCreateComment,
+} from "../controllers/comment.controllers";
 import isValid from "../middlewares/blogMiddleware";
 
 const router = express.Router();
@@ -24,5 +28,9 @@ router.patch("/:id", httpUpdateBlog);
 
 // Delete a blog by ID
 router.delete("/:id", httpDeleteBlog);
+// add comment of single blog
+router.post("/:id/comments", httpCreateComment);
+// get all blog comment on single blog
+router.get("/:id/comments", httpGetComment);
 
 export default router;

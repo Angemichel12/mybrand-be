@@ -1,16 +1,16 @@
 import mongoose, { Document, Schema } from "mongoose";
 
 interface IComment extends Document {
-  post: Schema.Types.ObjectId;
+  blog: Schema.Types.ObjectId;
   description: string;
 }
 
 const commentSchema = new Schema<IComment>(
   {
-    post: {
+    blog: {
       type: Schema.Types.ObjectId,
-      ref: "Post",
-      required: [true, "Post is required"],
+      ref: "Blog",
+      required: [true, "Blog is required"],
     },
 
     description: {

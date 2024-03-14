@@ -7,7 +7,7 @@ const router = express.Router();
 
 const httpCreateComment = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const { user, comment } = req.body;
+  const { description } = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send("Invalid blog ID");
@@ -19,7 +19,7 @@ const httpCreateComment = async (req: Request, res: Response) => {
     return res.status(404).send("Blog not found");
   }
 
-  const newComment = new Comment({ user, comment });
+  const newComment = new Comment({ blog: id, description });
   await newComment.save();
 
   blog.comments.push(newComment._id);
