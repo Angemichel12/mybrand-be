@@ -7,8 +7,4 @@ app.use(express.json());
 
 app.use("/api/v1", apiRouter);
 
-// app.use("/api/v1", (req, res) => {
-//   res.status(200).json({ message: "Welcome to the blog API" });
-// });
-
 export default app;

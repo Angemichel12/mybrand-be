@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import {
   httpCreateBlog,
   httpDeleteBlog,
@@ -7,18 +7,22 @@ import {
   httpUpdateBlog,
 } from "../controllers/blog.controllers";
 import isValid from "../middlewares/blogMiddleware";
+
 const router = express.Router();
 
 // Get all blogs
 router.get("/", httpGetBlog);
+
+// Create a new blog
 router.post("/", isValid, httpCreateBlog);
-// router.get("/blogs/:id", async (req: Request, res: Response) => {
-//   const blog = await Blog.findOne({ _id: req.params.id });
-//   res.send(blog);
-// });
+
+// Get a single blog by ID
 router.get("/:id", httpGetSingleBlog);
+
+// Update a blog by ID
 router.patch("/:id", httpUpdateBlog);
 
+// Delete a blog by ID
 router.delete("/:id", httpDeleteBlog);
 
 export default router;

@@ -1,4 +1,4 @@
-import Joi, { StringSchema } from "joi";
+import Joi from "joi";
 
 interface BlogData {
   title: string;
@@ -9,11 +9,11 @@ interface BlogData {
 const BlogSchema = Joi.object({
   title: Joi.string().required(),
   content: Joi.string().required(),
-  author: Joi.string().required(),
+  author: Joi.string(),
 });
 
-const validateMovie = (blogData: BlogData) => {
+const validateBlog = (blogData: BlogData) => {
   return BlogSchema.validate(blogData);
 };
 
-export default validateMovie;
+export default validateBlog;
