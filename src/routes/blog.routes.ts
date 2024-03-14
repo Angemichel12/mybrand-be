@@ -10,7 +10,9 @@ import {
   httpGetComment,
   httpCreateComment,
 } from "../controllers/comment.controllers";
+
 import isValid from "../middlewares/blogMiddleware";
+import isCommentValid from "../middlewares/commentMiddleware";
 
 const router = express.Router();
 
@@ -29,7 +31,7 @@ router.patch("/:id", httpUpdateBlog);
 // Delete a blog by ID
 router.delete("/:id", httpDeleteBlog);
 // add comment of single blog
-router.post("/:id/comments", httpCreateComment);
+router.post("/:id/comments", isCommentValid, httpCreateComment);
 // get all blog comment on single blog
 router.get("/:id/comments", httpGetComment);
 
