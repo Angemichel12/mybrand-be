@@ -1,22 +1,18 @@
 import { User } from "../models/user";
 import { Request, Response } from "express";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 const httpRegisterUser = async (req: Request, res: Response) => {
   try {
-    // ** Get The User Data From Body ;
     const user = req.body;
 
-    // ** destructure the information from user;
     const { name, email, password } = user;
-
-    // ** Check the email all ready exist  in database or not ;
-    // ** Import the user model from "./models/user";
 
     const isEmailAllReadyExist = await User.findOne({
       email: email,
     });
 
-    // ** Add a condition if the user exist we will send the response as email all ready exist
     if (isEmailAllReadyExist) {
       res.status(400).json({
         status: 400,
@@ -25,18 +21,15 @@ const httpRegisterUser = async (req: Request, res: Response) => {
       return;
     }
 
-    // ** if not create a new user ;
-    // !! Don't save the password as plain text in db . I am saving just for demonstration.
-    // ** You can use bcrypt to hash the plain password.
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-    // now create the user;
     const newUser = await User.create({
       name,
       email,
-      password,
+      password: hashedPassword,
     });
 
-    // Send the newUser as  response;
     res.status(200).json({
       status: 201,
       success: true,
@@ -44,10 +37,8 @@ const httpRegisterUser = async (req: Request, res: Response) => {
       user: newUser,
     });
   } catch (error: any) {
-    // console the error to debug
     console.log(error);
 
-    // Send the error message to the client
     res.status(400).json({
       status: 400,
       message: error.message.toString(),
@@ -55,4 +46,59 @@ const httpRegisterUser = async (req: Request, res: Response) => {
   }
 };
 
-export default httpRegisterUser;
+const httpUserLogin = async (req: Request, res: Response) => {
+  try {
+    const user = req.body;
+
+    const { email, password } = user;
+
+    const isUserExist = await User.findOne({
+      email: email,
+    });
+
+    if (!isUserExist) {
+      res.status(404).json({
+        status: 404,
+        success: false,
+        message: "User not found",
+      });
+      return;
+    }
+
+    const isPasswordMatched = await bcrypt.compare(
+      password,
+      isUserExist.password
+    );
+
+    if (!isPasswordMatched) {
+      res.status(400).json({
+        status: 400,
+        success: false,
+        message: "wrong password",
+      });
+      return;
+    }
+
+    const token = jwt.sign(
+      { _id: isUserExist._id, email: isUserExist.email },
+      "YOUR_SECRET",
+      {
+        expiresIn: "1d",
+      }
+    );
+
+    res.status(200).json({
+      status: 200,
+      success: true,
+      message: "login success",
+      token: token,
+    });
+  } catch (error: any) {
+    res.status(400).json({
+      status: 400,
+      message: error.message.toString(),
+    });
+  }
+};
+
+export { httpRegisterUser, httpUserLogin };
