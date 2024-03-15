@@ -11,6 +11,10 @@ import {
   httpCreateComment,
 } from "../controllers/comment.controllers";
 
+import {
+  httpCreateLike,
+  httpGetLikesCount,
+} from "../controllers/likes.controllers";
 import isValid from "../middlewares/blogMiddleware";
 import isCommentValid from "../middlewares/commentMiddleware";
 
@@ -34,5 +38,8 @@ router.delete("/:id", httpDeleteBlog);
 router.post("/:id/comments", isCommentValid, httpCreateComment);
 // get all blog comment on single blog
 router.get("/:id/comments", httpGetComment);
+
+router.post("/:id/likes", httpCreateLike);
+router.get("/:id/likes", httpGetLikesCount);
 
 export default router;
