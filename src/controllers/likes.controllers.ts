@@ -1,15 +1,20 @@
 import Like from "../models/likes";
 import { Request, Response } from "express";
+import { JwtPayload } from "jsonwebtoken";
 
-const httpCreateLike = async (req: Request, res: Response) => {
+interface ExpandRequest<T = Record<string, any>> extends Request {
+  UserId?: JwtPayload;
+}
+
+const httpCreateLike = async (req: ExpandRequest, res: Response) => {
   try {
     const blogId = req.params.id;
-    const userEmail = req.body.email;
+    const user = req.UserId;
 
-    const existingLike = await Like.findOne({ userEmail, blogId });
+    const existingLike = await Like.findOne({ user, blogId });
 
     if (existingLike) {
-      await Like.findOneAndDelete({ userEmail, blogId });
+      await Like.findOneAndDelete({ user, blogId });
       res.status(200).json({
         status: 200,
         success: true,
@@ -17,7 +22,7 @@ const httpCreateLike = async (req: Request, res: Response) => {
       });
     } else {
       const newLike = new Like({
-        userEmail,
+        user,
         blogId,
       });
 

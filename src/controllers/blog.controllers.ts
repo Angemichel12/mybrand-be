@@ -1,7 +1,18 @@
 import Blog from "../models/Blog";
 import { Request, Response } from "express";
+import { JwtPayload } from "jsonwebtoken";
 
-const httpCreateBlog = async (req: Request, res: Response) => {
+interface ExpandRequest<T = Record<string, any>> extends Request {
+  UserId?: JwtPayload;
+}
+
+const httpCreateBlog = async (req: ExpandRequest, res: Response) => {
+  const token = req.headers.authorization;
+
+  if (!req.UserId) {
+    res.status(401).send({ error: "Unauthorized" });
+    return;
+  }
   if (!req.body) {
     res.status(400).send({ error: "Request body is missing" });
     return;
@@ -10,6 +21,7 @@ const httpCreateBlog = async (req: Request, res: Response) => {
   const blog = new Blog({
     title: req.body.title,
     content: req.body.content,
+    author: req.UserId,
   });
 
   await blog.save();
@@ -17,7 +29,7 @@ const httpCreateBlog = async (req: Request, res: Response) => {
 };
 
 const httpGetBlog = async (req: Request, res: Response) => {
-  const blogs = await Blog.find();
+  const blogs = await Blog.find().populate("author", "name");
   res.send(blogs);
 };
 

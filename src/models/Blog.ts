@@ -4,13 +4,19 @@ interface IBlog extends Document {
   content: string;
   author: string;
   comments: mongoose.Types.ObjectId[];
+  likes: mongoose.Types.ObjectId[];
 }
 const BlogSchema: Schema = new Schema(
   {
     title: { type: String, required: true },
     content: { type: String, required: true },
-    author: { type: String, default: "Michel" },
+    author: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Users",
+      required: true,
+    },
     comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
+    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Like" }],
   },
   { timestamps: true }
 );

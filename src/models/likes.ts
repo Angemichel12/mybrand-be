@@ -1,20 +1,20 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 interface ILike extends Document {
-  userEmail: string;
+  user: Schema.Types.ObjectId;
   blogId: Schema.Types.ObjectId;
 }
 
 const LikeSchema = new Schema<ILike>(
   {
-    userEmail: {
-      type: String,
+    user: {
+      type: Schema.Types.ObjectId,
       required: true,
-      ref: "User", // assuming User is your user model
+      ref: "User",
     },
     blogId: {
       type: Schema.Types.ObjectId,
-      ref: "Blog", // assuming Blog is your blog model
+      ref: "Blog",
     },
   },
   { timestamps: true }

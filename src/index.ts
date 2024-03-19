@@ -1,11 +1,14 @@
 import app from "./app";
+import dotenv from "dotenv";
 import { mongoConnect } from "./services/mongos";
+
+dotenv.config();
 
 const startServer = async () => {
   await mongoConnect();
 
-  app.listen(5000, () => {
-    console.log("server is listening ..... 5000");
+  app.listen(process.env.PORT, () => {
+    console.log("server is started");
   });
 };
 

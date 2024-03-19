@@ -1,7 +1,6 @@
 import Joi from "joi";
 
 const schema = Joi.object({
-  blog: Joi.string().required(),
   description: Joi.string().required(),
 });
 

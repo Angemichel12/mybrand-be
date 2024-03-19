@@ -3,14 +3,25 @@ import mongoose from "mongoose";
 import Blog from "../models/Blog";
 import Comment from "../models/comments";
 
+import { JwtPayload } from "jsonwebtoken";
+
+interface ExpandRequest<T = Record<string, any>> extends Request {
+  UserId?: JwtPayload;
+}
+
 const router = express.Router();
 
-const httpCreateComment = async (req: Request, res: Response) => {
+const httpCreateComment = async (req: ExpandRequest, res: Response) => {
   const { id } = req.params;
   const { description } = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send("Invalid blog ID");
+  }
+  console.log(req.UserId);
+  if (!req.UserId) {
+    res.status(401).send({ error: "Unauthorized" });
+    return;
   }
 
   const blog = await Blog.findById(id);
@@ -19,7 +30,7 @@ const httpCreateComment = async (req: Request, res: Response) => {
     return res.status(404).send("Blog not found");
   }
 
-  const newComment = new Comment({ blog: id, description });
+  const newComment = new Comment({ blog: id, description, author: req.UserId });
   await newComment.save();
 
   blog.comments.push(newComment._id);
