@@ -27,7 +27,7 @@ const httpCreateComment = async (req: ExpandRequest, res: Response) => {
   const blog = await Blog.findById(id);
 
   if (!blog) {
-    return res.status(404).send("Blog not found");
+    return res.status(400).send("Blog not found");
   }
 
   const newComment = new Comment({ blog: id, description, author: req.UserId });
@@ -51,7 +51,7 @@ const httpGetComment = async (req: Request, res: Response) => {
     return res.status(404).send("Blog not found");
   }
 
-  res.status(200).send(blog.comments);
+  res.status(200).json({ status: 20, data: blog });
 };
 
 export { httpGetComment, httpCreateComment };

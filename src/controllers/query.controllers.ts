@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 
 const httpGetQueries = async (req: Request, res: Response) => {
   const queries = await Query.find();
-  res.send(queries);
+  res.status(200).json({ status: 200, data: queries });
 };
 const httpPostQueries = async (req: Request, res: Response) => {
   if (!req.body) {

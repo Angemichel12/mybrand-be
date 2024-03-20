@@ -32,7 +32,7 @@ const httpRegisterUser = async (req: Request, res: Response) => {
       password: hashedPassword,
     });
 
-    res.status(200).json({
+    res.status(201).json({
       status: 201,
       success: true,
       message: " User created Successfully",
@@ -50,25 +50,23 @@ const httpRegisterUser = async (req: Request, res: Response) => {
 
 const httpUserLogin = async (req: Request, res: Response) => {
   try {
-    const user = req.body;
-
-    const { email, password } = user;
+    const { email } = req.body;
 
     const isUserExist = await User.findOne({
       email: email,
     });
 
     if (!isUserExist) {
-      res.status(409).json({
-        status: 409,
+      res.status(404).json({
+        status: 404,
         success: false,
-        message: "Incorrect user email or password",
+        message: "Wrong credentials",
       });
       return;
     }
 
     const isPasswordMatched = await bcrypt.compare(
-      password,
+      req.body.password,
       isUserExist.password
     );
 

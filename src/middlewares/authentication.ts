@@ -14,13 +14,10 @@ const isAdmin = async (
   res: Response,
   next: NextFunction
 ) => {
-  const token = req.headers.authorization;
-  if (!token) {
-    return res
-      .status(401)
-      .json({ status: "401", message: "please login first" });
-  }
   try {
+    if (!req.header("Authorization"))
+      return res.status(401).json({ message: "Please sign in" });
+    const token = req.header("Authorization")?.split(" ")[1] as string;
     // const verfiyAccessToken = <T>(data: T) => {
     //   const secret_key = process.env.secret_key;
     //   return jwt.verify(String(data), secret_key as string);
@@ -54,7 +51,14 @@ const isAuthenticate = async (
     //   const secret_key = process.env.secret_key;
     //   return jwt.verify(String(data), secret_key as string);
     // };
-    const token = req.headers.authorization;
+    if (!req.header("Authorization"))
+      return res.status(401).json({ message: "Please sign in" });
+    const token = req.header("Authorization")?.split(" ")[1] as string;
+
+    // Check if token exists and is a valid JWT
+    if (!token || token.split(".").length !== 3) {
+      return res.status(401).json({ message: "Invalid token" });
+    }
     const decoded = verfiyAccessToken(token) as JwtPayload;
     if (decoded) {
       req.UserId = decoded._id;

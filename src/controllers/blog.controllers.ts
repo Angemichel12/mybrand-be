@@ -7,7 +7,9 @@ interface ExpandRequest<T = Record<string, any>> extends Request {
 }
 
 const httpCreateBlog = async (req: ExpandRequest, res: Response) => {
-  const token = req.headers.authorization;
+  if (!req.header("Authorization"))
+    return res.status(401).json({ message: "Please sign in" });
+  const token = req.header("Authorization")?.split(" ")[1] as string;
 
   if (!req.UserId) {
     res.status(401).send({ error: "Unauthorized" });
@@ -25,12 +27,12 @@ const httpCreateBlog = async (req: ExpandRequest, res: Response) => {
   });
 
   await blog.save();
-  res.status(201).send(blog);
+  res.status(201).json({ message: "blog created successfully", data: blog });
 };
 
 const httpGetBlog = async (req: Request, res: Response) => {
   const blogs = await Blog.find().populate("author", "name");
-  res.send(blogs);
+  res.status(200).json({ message: "success", data: blogs });
 };
 
 const httpPostBlog = async (req: Request, res: Response) => {
@@ -55,7 +57,7 @@ const httpGetSingleBlog = async (req: Request, res: Response) => {
       res.status(404).send({ error: "Blog doesn't exist!" });
       return;
     }
-    res.send(blog);
+    res.status(200).send(blog);
   } catch {
     res.status(404).send({ error: "Blog doesn't exist!" });
   }
