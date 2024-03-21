@@ -5,9 +5,8 @@ jobs:
       NODE_ENV: "test"
     working_directory: ~/guidebook
     docker:
-      docker:
-        - image: circleci/node:14.17.0
-        - image: mongo:4.1.6-xenial
+      - image: circleci/node:14.17.0
+      - image: mongo:4.1.6-xenial
     steps:
       - checkout
       - restore_cache:
