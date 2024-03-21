@@ -1,38 +1,29 @@
 version: 2.1
 jobs:
-  test:
+  build:
+    environment:
+      NODE_ENV: "test"
+    working_directory: ~/guidebook
     docker:
-      - image: cimg/base:stable
+      - image: circleci/node:8.15.0
+      - image: mongo:4.1.6-xenial
     steps:
       - checkout
+      - restore_cache:
+          key: v1-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: Install project dependencies
+          command: npm install --verbose
+      - save_cache:
+          key: v1-dependencies-{{ checksum "package.json"}}
+          paths:
+            - node_modules
+      - run: npm run lint
       - run:
           name: Run tests
-          command: npm test # replace with your test command
-  build:
-    docker:
-      - image: cimg/base:stable
-    steps:
-      - checkout
-      - run:
-          name: Build an artifact
-          command: npm run build # replace with your build command
-      - store_artifacts:
-          path: dist/ # replace with your build output directory
-  deploy:
-    docker:
-      - image: cimg/base:stable
-    steps:
-      - checkout
-      - run:
-          name: deploy
-          command: ./deploy.sh # replace with your deploy command
+          command: npm test -- --runInBand
 workflows:
-  example:
+  version: 2.1
+  run_build:
     jobs:
-      - test
-      - build:
-          requires:
-            - test
-      - deploy:
-          requires:
-            - build
+      - build
