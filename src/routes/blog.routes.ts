@@ -10,6 +10,7 @@ import {
   httpGetComment,
   httpCreateComment,
 } from "../controllers/comment.controllers";
+import multer from "multer";
 
 import {
   httpCreateLike,
@@ -19,13 +20,15 @@ import isValid from "../middlewares/blogMiddleware";
 import isCommentValid from "../middlewares/commentMiddleware";
 import { isAdmin, isAuthenticate } from "../middlewares/authentication";
 
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 const router = express.Router();
 
 // Get all blogs
 router.get("/", httpGetBlog);
 
 // Create a new blog
-router.post("/", isAdmin, isValid, httpCreateBlog);
+router.post("/", isAdmin, upload.single("image"), isValid, httpCreateBlog);
 
 // Get a single blog by ID
 router.get("/:id", httpGetSingleBlog);

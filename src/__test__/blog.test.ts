@@ -13,10 +13,13 @@ import { User } from "../models/user";
 import Blog from "../models/Blog";
 import Comment from "../models/comments";
 import likes from "../models/likes";
+import fs from "fs";
+import path from "path";
 
 const blogData = {
   title: "Test Blog Title",
-  content: "This is a test blog content.",
+  content: "This is a test blog description.",
+  image: "test.png",
 };
 let token: string;
 let blogId: string;
@@ -63,15 +66,35 @@ describe("Blog API", () => {
     //=================== Create Blog =================
 
     test("should create a new blog and return 201", async () => {
-      const { body } = await request(app)
+      const createBlogResponse = await request(app)
         .post("/api/v1/blogs/")
         .set("Authorization", `Bearer ${token}`)
-        .send(blogData)
-        .expect("Content-Type", /json/)
+        .field("title", blogData.title)
+        .field("content", blogData.content)
+        .attach(
+          "image",
+          fs.readFileSync(path.join(__dirname, blogData.image)),
+          blogData.image
+        )
         .expect(201);
-      blogId = body.data._id;
-      console.log("+++++", blogId);
-    });
+
+      blogId = createBlogResponse.body.data._id;
+
+      expect(createBlogResponse.body).toHaveProperty(
+        "message",
+        "blog created successfully"
+      );
+      expect(createBlogResponse.body.data).toHaveProperty(
+        "title",
+        blogData.title
+      );
+      expect(createBlogResponse.body.data).toHaveProperty(
+        "content",
+        blogData.content
+      );
+
+      blogId = createBlogResponse.body.data._id;
+    }, 1000000);
     // ================== Display single blog ======
     test("should display a single blog and return 200", async () => {
       const { body } = await request(app)
