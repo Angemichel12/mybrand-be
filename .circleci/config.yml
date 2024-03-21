@@ -2,8 +2,12 @@ version: 2.1
 jobs:
   build:
     environment:
-      NODE_ENV: "test"
-    working_directory: ~/guidebook
+      PORT: ${PORT}
+      DB_TEST_HOST: ${DB_TEST_HOST}
+      SECRET_KEY: ${SECRET_KEY}
+      CLOUD_NAME: ${CLOUD_NAME}
+      API_KEY: ${API_KEY}
+      API_SECRET: ${API_SECRET}
     docker:
       - image: circleci/node:15.14.0
       - image: mongo:4.1.6-xenial
