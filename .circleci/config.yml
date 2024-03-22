@@ -28,6 +28,9 @@ jobs:
       - run:
           name: Compile TypeScript
           command: npx tsc
+       - run:
+          name: building
+          command: npm run build
       - run:
           name: Run tests
           command: npm run test
