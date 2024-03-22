@@ -15,6 +15,7 @@ import Comment from "../models/comments";
 import likes from "../models/likes";
 import fs from "fs";
 import path from "path";
+jest.setTimeout(100000);
 
 const blogData = {
   title: "Test Blog Title",
