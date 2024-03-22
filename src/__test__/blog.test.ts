@@ -29,14 +29,14 @@ describe("Blog API", () => {
     await mongoConnectTest();
     const { body } = await request(app).post("/api/users/login").send(userData);
     token = body.token;
-  });
+  }, 100000);
   afterAll(async () => {
     await User.deleteMany();
     await Blog.deleteMany();
     await Comment.deleteMany();
     await likes.deleteMany();
     await mongoDisconnectTest();
-  });
+  }, 100000);
   describe("Welcome api message", () => {
     test("It should return 200 and welcome message", async () => {
       const { body } = await request(app)
