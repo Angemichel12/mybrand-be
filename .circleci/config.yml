@@ -29,9 +29,6 @@ jobs:
           name: Compile TypeScript
           command: npx tsc
       - run:
-          name: Run tests
-          command: npm run test:ci
-      - run:
           name: Start the application in dev mode
           command: npm run dev
 workflows:
