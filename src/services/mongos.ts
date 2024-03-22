@@ -19,10 +19,8 @@ const mongoConnect = async () => {
   await mongoose.connect(dbHost);
 };
 const mongoConnectTest = async () => {
-  const DB_TEST_HOST = process.env.DB_TEST_HOST;
-  if (!DB_TEST_HOST) {
-    throw new Error("DB_HOST is not defined in the environment variables");
-  }
+  const DB_TEST_HOST =
+    "mongodb+srv://angemicheluwizeye:IuRptJML18VrFlPV@cluster0.skakefw.mongodb.net/myBrand?retryWrites=true&w=majority&appName=Cluster0";
   await mongoose.connect(DB_TEST_HOST);
 };
 const mongoDisconnectTest = async () => {
