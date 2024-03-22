@@ -550,7 +550,7 @@
     },
     "/blogs/{ID}/likes/add": {
       "post": {
-        "tags": ["userid"],
+        "tags": ["likes"],
         "summary": "like blog",
         "description": "Create like on Blog",
         "parameters": [

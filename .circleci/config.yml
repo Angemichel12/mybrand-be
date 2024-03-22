@@ -26,8 +26,14 @@ jobs:
           paths:
             - node_modules
       - run:
+          name: Compile TypeScript
+          command: npx tsc
+      - run:
           name: Run tests
-          command: npm test -- --runInBand
+          command: npm run test:ci
+      - run:
+          name: Start the application in dev mode
+          command: npm run dev
 workflows:
   version: 2.1
   run_build:
