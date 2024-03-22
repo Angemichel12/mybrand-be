@@ -78,7 +78,8 @@ const httpUserLogin = async (req: Request, res: Response) => {
       });
       return;
     }
-    const secret_key = process.env.secret_key;
+    const secret_key =
+      "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcxMDc3NTc2MywiaWF0IjoxNzEwNzc1NzYzfQ.aG82xGfRlbTLBUgLynbJTaAiQvzwr5Qr17mDTEW1doY";
     if (!secret_key) {
       throw new Error("secret_key is not defined in the environment variables");
     }
