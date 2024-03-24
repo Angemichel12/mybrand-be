@@ -8,6 +8,10 @@ export const userData = {
   email: "admin1234@gmail.com",
   password: "Michel@12",
 };
+export const loginUserData = {
+  email: "admin1234@gmail.com",
+  password: "Michel@12",
+};
 export const userLoginData = {
   email: "admin1234@gmail.com",
   password: "Michel@12",

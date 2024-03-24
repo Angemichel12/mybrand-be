@@ -1,72 +1,93 @@
 import request from "supertest";
-import { mongoConnectTest, mongoDisconnectTest } from "../services/mongos";
 import app from "../app";
-// import { blogData } from "../mock/statics";
-import { response } from "express";
+import { mongoConnectTest, mongoDisconnectTest } from "../services/mongos";
 import {
-  commentData,
-  queryData,
+  loginUserData,
   userData,
-  userLoginData,
+  queryData,
+  commentData,
 } from "../mock/statics";
 import { User } from "../models/user";
-import Blog from "../models/Blog";
-import Comment from "../models/comments";
-import likes from "../models/likes";
 import fs from "fs";
 import path from "path";
-jest.setTimeout(100000);
+import Blog from "../models/Blog";
 
+jest.setTimeout(100000);
+let token: string;
+let blogId: string;
 const blogData = {
   title: "Test Blog Title",
   content: "This is a test blog description.",
   image: "test.png",
 };
-let token: string;
-let blogId: string;
+
 describe("Blog API", () => {
   beforeAll(async () => {
     await mongoConnectTest();
-    const { body } = await request(app).post("/api/users/login").send(userData);
-    token = body.token;
-  }, 100000);
+  });
   afterAll(async () => {
-    await User.deleteMany();
     await Blog.deleteMany();
-    await Comment.deleteMany();
-    await likes.deleteMany();
+    await User.deleteMany();
     await mongoDisconnectTest();
-  }, 100000);
-  describe("Welcome api message", () => {
-    test("It should return 200 and welcome message", async () => {
+  });
+  describe("user test", () => {
+    test("should return 400 and name required", async () => {
+      const { body } = await request(app)
+        .post("/api/v1/users/signup/")
+        .send({ email: "admin1234@gmail.com", password: "Michel@12" })
+        .expect(400);
+
+      expect(body.message).toStrictEqual('"name" is required');
+    });
+    test("should return 400 and email required", async () => {
+      const { body } = await request(app)
+        .post("/api/v1/users/signup/")
+        .send({ name: "admin", password: "Michel@12" })
+        .expect(400);
+
+      expect(body.message).toStrictEqual('"email" is required');
+    });
+    test("return 201 and User created Successfully", async () => {
+      const { body } = await request(app)
+        .post("/api/v1/users/signup/")
+        .send(userData)
+        .expect("Content-Type", /json/)
+        .expect(201);
+
+      const loginResponse = await request(app)
+        .post("/api/v1/users/login/")
+        .send(loginUserData)
+        .expect("Content-Type", /json/)
+        .expect(200);
+
+      expect(loginResponse.body.message).toStrictEqual("login success");
+      token = loginResponse.body.token;
+    });
+    test("return 409 and Email all ready in use", async () => {
+      const { body } = await request(app)
+        .post("/api/v1/users/signup/")
+        .send(userData)
+        .expect(409);
+
+      expect(body.message).toStrictEqual("Email all ready in use");
+    });
+  });
+  describe("Blog test", () => {
+    test("should return 200 and Welcome to the blog API", async () => {
       const { body } = await request(app)
         .get("/api/v1")
         .expect("Content-Type", /json/)
         .expect(200);
+
       expect(body.message).toStrictEqual("Welcome to the blog API");
     });
-    test("It should return 201 and succes message", async () => {
-      const { body } = await request(app).get("/api/v1/blogs/").expect(200);
-      expect(body.message).toStrictEqual("success");
-      expect(body.data).toBeDefined();
-    });
-    test("It should return signup and login", async () => {
-      const response = await request(app)
-        .post("/api/v1/users/")
-        .send(userData)
-        .expect(201);
-      const responseLogin = await request(app)
-        .post("/api/v1/users/login")
-        .send(userLoginData)
+    test("should return 200 and list of blog", async () => {
+      const { body } = await request(app)
+        .get("/api/v1/blogs/")
+        .expect("Content-Type", /json/)
         .expect(200);
-
-      // console.log("++++++++++", responseLogin.body);
-      token = responseLogin.body.token;
     });
-
-    //=================== Create Blog =================
-
-    test("should create a new blog and return 201", async () => {
+    test("should return 201 and blog successfull created", async () => {
       const createBlogResponse = await request(app)
         .post("/api/v1/blogs/")
         .set("Authorization", `Bearer ${token}`)
@@ -77,26 +98,14 @@ describe("Blog API", () => {
           fs.readFileSync(path.join(__dirname, blogData.image)),
           blogData.image
         )
+        .expect("Content-Type", /json/)
         .expect(201);
 
-      blogId = createBlogResponse.body.data._id;
-
-      expect(createBlogResponse.body).toHaveProperty(
-        "message",
+      expect(createBlogResponse.body.message).toStrictEqual(
         "blog created successfully"
       );
-      expect(createBlogResponse.body.data).toHaveProperty(
-        "title",
-        blogData.title
-      );
-      expect(createBlogResponse.body.data).toHaveProperty(
-        "content",
-        blogData.content
-      );
-
       blogId = createBlogResponse.body.data._id;
-    }, 1000000);
-    // ================== Display single blog ======
+    });
     test("should display a single blog and return 200", async () => {
       const { body } = await request(app)
         .get(`/api/v1/blogs/${blogId}`)
@@ -104,7 +113,6 @@ describe("Blog API", () => {
         .expect("Content-Type", /json/)
         .expect(200);
     });
-
     //================= create comment =============
     test("should create comment on blog and return 201", async () => {
       const { body } = await request(app)

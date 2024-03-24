@@ -254,7 +254,7 @@
   ],
 
   "paths": {
-    "/users/": {
+    "/users/signup": {
       "post": {
         "tags": ["Authentication"],
         "summary": "User signup",
@@ -306,35 +306,42 @@
       }
     },
 
-    "/blogs/add": {
+    "/blogs/": {
       "post": {
         "tags": ["Blogs"],
-        "summary": "Create blogs",
-        "description": "Create blogs",
+        "summary": "Create a new blog post",
+        "description": "Create a new blog post",
         "requestBody": {
-          "required": "true",
+          "required": true,
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/Blogs"
+                "type": "object",
+                "properties": {
+                  "title": { "type": "string" },
+                  "description": { "type": "string" },
+                  "coverImage": { "type": "string", "format": "binary" }
+                },
+                "required": ["title", "description", "coverImage"]
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "Enrollment created successfully!"
+            "description": "Blog created successfully!"
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
           },
           "401": {
-            "$ref": "#/components/responses/Unauthorized"
+            "$ref": "#/components/responses/UnauthorizedError"
           }
         }
       }
     },
-    "/blogs/": {
+
+    "/blogs/all/": {
       "get": {
         "tags": ["Blogs"],
         "summary": "Get blogs",

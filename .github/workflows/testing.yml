@@ -1,25 +1,35 @@
 name: Node.js CI
+
 on:
+  push:
+    branches: ["ft-ci-integration"]
   pull_request:
+    branches: ["ft-ci-integration"]
+
+env:
+  PORT: ${{ secrets.PORT}}
+  DB_HOST: ${{ secrets.DB_HOST}}
+  DB_TEST_HOST: ${{ secrets.DB_TEST_HOST}}
+  secret_key: ${{ secrets.secret_key}}
+  CLOUD_NAME: ${{ secrets.CLOUD_NAME}}
+  API_KEY: ${{ secrets.API_KEY}}
+  API_SECRET: ${{ secrets.API_SECRET}}
+
 jobs:
-  tests:
-    runs-on: windows-latest
+  build:
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: ["18.x"]
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+      - uses: actions/checkout@v4
+      - name: Use node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Install dependencies
-        run: npm ci
-      - name: circle ci test
-        run: npm test
-      - name: Coverage badge
-        uses: codecov/codecov-action@v4.0.1
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          slug: Angemichel12/mybrand-be
+          cache: "npm"
+      - name: install dependencies
+        run: npm install
+      - run: npm run build --if-present
+      - run: npm test
