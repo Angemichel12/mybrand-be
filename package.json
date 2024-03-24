@@ -8,7 +8,7 @@
     "dev": "ts-node-dev ./src/index.ts",
     "test": "jest --watchAll --no-cache --detectOpenHandles",
     "test:ci": "jest --detectOpenHandles --coverage",
-    "build": "tsc && copyfiles -u 1 ./src/**/*.{jpg,jpeg,png,gif} dist"
+    "build": "tsc && copyfiles -u 1 ./src/**/*.{jpg,jpeg,png,gif} dist && copyfiles -u 1 ./__test__/*.{jpg,jpeg,png,gif} dist/__test__"
   },
   "keywords": [],
   "author": "",
