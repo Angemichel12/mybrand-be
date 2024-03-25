@@ -227,6 +227,17 @@
             "example": "Good blog"
           }
         }
+      },
+      "Like": {
+        "required": ["user id"],
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "add user id",
+            "example": "dfdfdfdfdfdsfdf"
+          }
+        }
       }
     }
   },
@@ -322,7 +333,7 @@
                   "description": { "type": "string" },
                   "coverImage": { "type": "string", "format": "binary" }
                 },
-                "required": ["title", "description", "coverImage"]
+                "required": ["title", "content", "image"]
               }
             }
           }
@@ -477,7 +488,7 @@
         }
       }
     },
-    "/blogs/{ID}/comments/add": {
+    "/blogs/{ID}/comments/": {
       "post": {
         "tags": ["Comments"],
         "summary": "Create comment",
@@ -507,6 +518,73 @@
         "responses": {
           "201": {
             "description": "Comment created successfully!"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/blogs/{ID}/likes/": {
+      "get": {
+        "tags": ["likes"],
+        "summary": "like blog",
+        "description": "Get kujes of blog",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": 1
+            },
+            "description": "Blog id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "like successfully."
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/blogs/{ID}/likes/add": {
+      "post": {
+        "tags": ["likes"],
+        "summary": "like blog",
+        "description": "Create like on Blog",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": 1
+            },
+            "description": "Blog id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Like"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "like created successfully!"
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
