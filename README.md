@@ -1,23 +1,57 @@
-[![Coverage Status](https://coveralls.io/repos/github/Angemichel12/mybrand-be/badge.svg?branch=develop)](https://coveralls.io/github/Angemichel12/mybrand-be?branch=develop) [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/BahMWXgrr9AgKtgKjKENJe/7trdjhepaQ4hhvRL4mBu5R/tree/main.svg?style=svg&circle-token=CCIPRJ_HLsDFRcoApv9dmnPTx2Aec_caf2a11e6e16f824e3e7f6c1b3272abc05a334a0)](https://dl.circleci.com/status-badge/redirect/circleci/BahMWXgrr9AgKtgKjKENJe/7trdjhepaQ4hhvRL4mBu5R/tree/main)
+[![Coverage Status](https://coveralls.io/repos/github/Angemichel12/mybrand-be/badge.svg?branch=develop)](https://coveralls.io/github/Angemichel12/mybrand-be?branch=develop) [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/BahMWXgrr9AgKtgKjKENJe/37d45a15-673e-456d-bde5-2b0542607140/tree/develop.svg?style=svg&circle-token=CCIPRJ_MaJvKagEtEjB9WQNrikshN_d33bac1a4ca013f07d8654e9a19a59a643f2a135)](https://dl.circleci.com/status-badge/redirect/circleci/BahMWXgrr9AgKtgKjKENJe/37d45a15-673e-456d-bde5-2b0542607140/tree/develop)
 
-# My brand backend api
+## portfolio_api
 
-## Description
+my portfolio restApi
 
-This API serves as the backend for a blog/portfolio application, providing CRUD (Create, Read, Update, Delete) functionalities for managing blogs, handling user authentication (login and register), allowing users to like blogs, create comments, and send queries.
+# Description
 
-## Features
+This is a RESTful API for managing personal blogs. It allows admin users to create, read, update and delete their own blogs. This RESTful API built using Node.js with Typescript,MongoDb and Express.js.
 
-List the features of your project. This could include:
+## Documentation
 
-- Feature 1
-- Feature 2
-- Feature 3
+### base endpoint
 
-## Installation
+/api
 
-Instructions for how to install your project. This could be as simple as:
+```
+Blog:
+  /blogs/
+  /blogs/
+  /blogs/{id}
+  /blogs/{id}
+  /blogs/{id}
 
-```bash
-npm install
+Comment:
+  /comments/
+  /comments/
+
+User:
+  /users/register
+  /users/login
+```
+
+## Setup
+
+### Dependencies
+
+```
+  node.js
+  npm
+```
+
+### Getting Started
+
+```
+git clone  https://github.com/Angemichel12/mybrand-be/tree/develop
+cd portfolio_api
+npm i
+set all environmental variable
+npm run start
+```
+
+## Testing
+
+```
+npm run test
 ```
