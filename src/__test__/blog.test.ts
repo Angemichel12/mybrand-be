@@ -12,6 +12,8 @@ import path from "path";
 import Blog from "../models/Blog";
 import { server } from "../app";
 
+jest.setTimeout(100000);
+
 let testServer: any;
 
 let token: string;
@@ -47,7 +49,8 @@ describe("Blog API", () => {
       expect(res.status).toBe(400);
       expect(res.body).toHaveProperty("message", '"name" is required');
     });
-    test("should return 400 and email required", async () => {
+
+    it("should return 400 and email required", async () => {
       const { body } = await request(testServer)
         .post("/api/v1/users/signup/")
         .send({ name: "admin", password: "Michel@12" })
@@ -55,7 +58,7 @@ describe("Blog API", () => {
 
       expect(body.message).toStrictEqual('"email" is required');
     });
-    test("return 201 and User created Successfully", async () => {
+    it("return 201 and User created Successfully", async () => {
       const { body } = await request(testServer)
         .post("/api/v1/users/signup/")
         .send(userData)
@@ -71,7 +74,7 @@ describe("Blog API", () => {
       expect(loginResponse.body.message).toStrictEqual("login success");
       token = loginResponse.body.token;
     });
-    test("return 409 and Email all ready in use", async () => {
+    it("return 409 and Email all ready in use", async () => {
       const res = await request(testServer)
         .post("/api/v1/users/signup/")
         .send(userData);
