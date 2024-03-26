@@ -12,12 +12,11 @@ import path from "path";
 import Blog from "../models/Blog";
 import { server } from "../app";
 
-jest.setTimeout(100000);
-
 let testServer: any;
 
 let token: string;
 let blogId: string;
+
 const blogData = {
   title: "Test Blog Title",
   content: "This is a test blog description.",
