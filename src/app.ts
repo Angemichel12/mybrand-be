@@ -16,9 +16,9 @@ app.use(
   })
 );
 cloudinary.config({
-  cloud_name: "ittl",
-  api_key: "557828265383819",
-  api_secret: "3TI2OEluFdwhz4QjaFw3f7pzX3I",
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
 });
 
 app.use(express.json());

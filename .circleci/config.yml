@@ -1,41 +1,20 @@
 version: 2.1
+orbs:
+  node: circleci/node@4.1.0
+  coveralls: coveralls/coveralls@2.2.1
 jobs:
   build:
-    environment:
-      PORT: ${PORT}
-      DB_TEST_HOST: ${DB_TEST_HOST}
-      SECRET_KEY: ${SECRET_KEY}
-      CLOUD_NAME: ${CLOUD_NAME}
-      API_KEY: ${API_KEY}
-      API_SECRET: ${API_SECRET}
     docker:
-      - image: circleci/node:15.14.0
-      - image: mongo:4.1.6-xenial
+      - image: cimg/node:18.18.0
     steps:
       - checkout
-      - restore_cache:
-          key: v1-dependencies-{{ checksum "package.json" }}
       - run:
-          name: Install project dependencies
-          command: npm install --verbose
+          name: Install dependencies
+          command: npm install
       - run:
-          name: Install TypeScript
-          command: npm install --save-dev typescript
-      - save_cache:
-          key: v1-dependencies-{{ checksum "package.json"}}
-          paths:
-            - node_modules
-      - run:
-          name: Compile TypeScript
-          command: npx tsc
-      - run:
-          name: building
+          name: Build project
           command: npm run build
       - run:
-          name: Run tests
+          name: code-coverage
           command: npm run test
-workflows:
-  version: 2.1
-  run_build:
-    jobs:
-      - build
+      - coveralls/upload
