@@ -1,9 +1,11 @@
-blogs/{id}/comments:
+/blogs/{id}/comments:
   post:
     tags:
       - Comment
     summary: Create a new comment.
     description: Creates a new comment on the specified blog
+    security:
+      - bearerAuth: []
     parameters:
       - name: id
         in: path

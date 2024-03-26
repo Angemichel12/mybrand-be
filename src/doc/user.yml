@@ -1,4 +1,4 @@
-/users/register:
+/users/signup:
   post:
     tags:
       - Authentication
@@ -13,14 +13,14 @@
             properties:
               name:
                 type: string
-                example: john
+                example: michel
               email:
                 type: string
                 format: email
-                example: example@gmail.com
+                example: michel@gmail.com
               password:
                 type: string
-                example: John@knight1234
+                example: michel@1234
             required:
               - name
               - email
@@ -49,10 +49,10 @@
               email:
                 type: string
                 format: email
-                example: example@gmail.com
+                example: michel@gmail.com
               password:
                 type: string
-                example: John@knight1234
+                example: michel@1234
             required:
               - email
               - password

@@ -7,7 +7,7 @@ dotenv.config();
 
 const httpRegisterUser = async (req: Request, res: Response) => {
   try {
-    const { email, name } = req.body;
+    const { email } = req.body;
 
     const isEmailAllReadyExist = await User.findOne({
       email: email,

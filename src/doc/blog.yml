@@ -122,12 +122,14 @@
         description: blog with the given ID was not found.
       "500":
         description: something goes wrong
-/blogs/{id}/like:
+/blogs/{id}/likes:
   post:
     tags:
       - likes
     summary: like a blog
     description: increase like number of a blog
+    security:
+      - bearerAuth: []
     parameters:
       - name: id
         in: path
