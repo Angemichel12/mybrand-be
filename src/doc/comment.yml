@@ -1,0 +1,49 @@
+blogs/{id}/comments:
+  post:
+    tags:
+      - Comment
+    summary: Create a new comment.
+    description: Creates a new comment on the specified blog
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: blog id
+        type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              description:
+                type: string
+                example: This is a great blog!
+            required:
+              - description
+    responses:
+      "201":
+        description: comment posted successfully
+      "404":
+        description: Invalid blog ID, blog not found
+      "500":
+        description: something goes wrong
+get:
+  tags:
+    - Comment
+  summary: Get comments for a blog by its id.
+  description: Retrieves all comments for a blog with the given id from params
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: blog id
+      type: string
+  responses:
+    "200":
+      description: comments retrieved successfully
+    "404":
+      description: blog with the given ID was not found.
+    "500":
+      description: server error

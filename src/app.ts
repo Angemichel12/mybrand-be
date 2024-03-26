@@ -6,8 +6,7 @@ import "dotenv/config";
 import swaggerUi from "swagger-ui-express";
 import { ConnectToDb } from "./services/mongos";
 import { getPort } from "./services/getPort";
-import fs from "fs";
-const jsonData = JSON.parse(fs.readFileSync("./swagger.json", "utf-8"));
+import { addDocumentation } from "./services/docs";
 
 const app: Express = express();
 
@@ -34,8 +33,9 @@ cloudinary.config({
 });
 
 app.use(express.json());
-app.use("/api/doc/", swaggerUi.serve, swaggerUi.setup(jsonData));
+
 app.use("/api/v1", apiRouter);
+addDocumentation(app);
 app.use("/api/v1", (req, res) => {
   res.status(200).json({ message: "Welcome to the blog API" });
 });
