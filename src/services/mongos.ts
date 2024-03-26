@@ -3,33 +3,19 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-mongoose.connection.on("open", () => {
-  console.info("Database connected");
-});
+let db: string | undefined = process.env.DB_HOST;
 
-mongoose.connection.on("close", () => {
-  console.info("something went wrong");
-});
+if (process.env.NODE_ENV === "test") {
+  db = process.env.DB_TEST_HOST;
+}
 
-const mongoConnect = async () => {
-  const dbHost = process.env.DB_HOST;
-  if (!dbHost) {
-    throw new Error("DB_HOST is not defined in the environment variables");
+export const ConnectToDb = async (): Promise<void> => {
+  if (db !== undefined) {
+    try {
+      await mongoose.connect(db);
+      console.log(`[database] Connected to ${db} database successfully`);
+    } catch (error) {
+      console.error("[database error] MongoDB connection error:", error);
+    }
   }
-  await mongoose.connect(dbHost);
 };
-const mongoConnectTest = async () => {
-  const DB_TEST_HOST = process.env.DB_TEST_HOST;
-  if (!DB_TEST_HOST) {
-    throw new Error("DB_HOST is not defined in the environment variables");
-  }
-  await mongoose.connect(DB_TEST_HOST);
-};
-const mongoDisconnectTest = async () => {
-  await mongoose.disconnect();
-};
-const mongoDisconnect = async () => {
-  await mongoose.disconnect();
-};
-
-export { mongoConnect, mongoDisconnect, mongoConnectTest, mongoDisconnectTest };
