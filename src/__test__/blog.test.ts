@@ -10,6 +10,7 @@ import {
 import { User } from "../models/user";
 import fs from "fs";
 import path from "path";
+import Blog from "../models/Blog";
 jest.setTimeout(100000);
 
 jest.setTimeout(100000);
