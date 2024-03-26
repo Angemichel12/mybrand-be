@@ -90,7 +90,7 @@ const httpGetSingleBlog = async (req: Request, res: Response) => {
       res.status(404).send({ error: "Blog doesn't exist!" });
       return;
     }
-    res.status(200).send(blog);
+    res.status(200).json({ status: 200, data: blog });
   } catch {
     res.status(404).send({ error: "Blog doesn't exist!" });
   }
