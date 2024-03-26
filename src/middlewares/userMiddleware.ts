@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 
-import validateUser from "../validations/user";
+import { validateUser, validateUserLogin } from "../validations/user";
 
 const isUserValid = (req: Request, res: Response, next: NextFunction): void => {
   const { error } = validateUser(req.body);
@@ -10,5 +10,16 @@ const isUserValid = (req: Request, res: Response, next: NextFunction): void => {
   }
   next();
 };
-
-export default isUserValid;
+const isUserValidToLogin = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
+  const { error } = validateUserLogin(req.body);
+  if (error) {
+    res.status(400).json({ message: error.details[0].message });
+    return;
+  }
+  next();
+};
+export { isUserValid, isUserValidToLogin };

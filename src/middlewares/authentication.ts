@@ -18,12 +18,8 @@ const isAdmin = async (
     if (!req.header("Authorization"))
       return res.status(401).json({ message: "Please sign in" });
     const token = req.header("Authorization")?.split(" ")[1] as string;
-    // const verfiyAccessToken = <T>(data: T) => {
-    //   const secret_key = process.env.secret_key;
-    //   return jwt.verify(String(data), secret_key as string);
-    // };
-    const decoded = verfiyAccessToken(token) as JwtPayload;
-    if (decoded) {
+    try {
+      const decoded = verfiyAccessToken(token) as JwtPayload;
       req.UserId = decoded._id;
       const id = req.UserId;
       const user = await User.findById(id);
@@ -34,6 +30,9 @@ const isAdmin = async (
         return res.status(406).json({ message: "Ony for Admin" });
       }
       next();
+    } catch (err) {
+      // If the token is invalid, jwt.verify will throw an error
+      return res.status(401).json({ message: "Unauthorized" });
     }
   } catch (error) {
     console.error(error);
@@ -47,20 +46,11 @@ const isAuthenticate = async (
   next: NextFunction
 ) => {
   try {
-    // const verfiyAccessToken = <T>(data: T) => {
-    //   const secret_key = process.env.secret_key;
-    //   return jwt.verify(String(data), secret_key as string);
-    // };
     if (!req.header("Authorization"))
       return res.status(401).json({ message: "Please sign in" });
     const token = req.header("Authorization")?.split(" ")[1] as string;
-
-    // Check if token exists and is a valid JWT
-    if (!token || token.split(".").length !== 3) {
-      return res.status(401).json({ message: "Invalid token" });
-    }
-    const decoded = verfiyAccessToken(token) as JwtPayload;
-    if (decoded) {
+    try {
+      const decoded = verfiyAccessToken(token) as JwtPayload;
       req.UserId = decoded._id;
       const id = req.UserId;
       const user = await User.findById(id);
@@ -68,6 +58,9 @@ const isAuthenticate = async (
         return res.status(404).json({ message: "user not found" });
       }
       next();
+    } catch (err) {
+      // If the token is invalid, jwt.verify will throw an error
+      return res.status(401).json({ message: "Unauthorized" });
     }
   } catch (error) {
     console.error(error);

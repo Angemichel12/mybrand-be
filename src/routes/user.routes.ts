@@ -1,5 +1,5 @@
 import express from "express";
-import isUserValid from "../middlewares/userMiddleware";
+import { isUserValid, isUserValidToLogin } from "../middlewares/userMiddleware";
 
 import {
   httpRegisterUser,
@@ -7,7 +7,7 @@ import {
 } from "../controllers/user.controllers";
 
 const userRouter = express.Router();
-userRouter.post("/", isUserValid, httpRegisterUser);
-userRouter.post("/login", httpUserLogin);
+userRouter.post("/signup", isUserValid, httpRegisterUser);
+userRouter.post("/login", isUserValidToLogin, httpUserLogin);
 
 export default userRouter;

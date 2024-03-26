@@ -7,28 +7,25 @@ dotenv.config();
 
 const httpRegisterUser = async (req: Request, res: Response) => {
   try {
-    const user = req.body;
-
-    const { name, email, password } = user;
+    const { email, name } = req.body;
 
     const isEmailAllReadyExist = await User.findOne({
       email: email,
     });
 
     if (isEmailAllReadyExist) {
-      res.status(400).json({
-        status: 400,
+      res.status(409).json({
+        status: 409,
         message: "Email all ready in use",
       });
       return;
     }
 
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
-    const newUser = await User.create({
-      name,
-      email,
+    await User.create({
+      ...req.body,
       password: hashedPassword,
     });
 
@@ -36,7 +33,6 @@ const httpRegisterUser = async (req: Request, res: Response) => {
       status: 201,
       success: true,
       message: " User created Successfully",
-      // user: newUser,
     });
   } catch (error: any) {
     console.log(error);
@@ -60,7 +56,7 @@ const httpUserLogin = async (req: Request, res: Response) => {
       res.status(404).json({
         status: 404,
         success: false,
-        message: "Wrong credentials",
+        message: "Wrong email or password",
       });
       return;
     }
@@ -71,8 +67,8 @@ const httpUserLogin = async (req: Request, res: Response) => {
     );
 
     if (!isPasswordMatched) {
-      res.status(409).json({
-        status: 409,
+      res.status(404).json({
+        status: 404,
         success: false,
         message: "Incorrect user email or password",
       });
@@ -98,8 +94,8 @@ const httpUserLogin = async (req: Request, res: Response) => {
       token: token,
     });
   } catch (error: any) {
-    res.status(400).json({
-      status: 400,
+    res.status(404).json({
+      status: 404,
       message: error.message.toString(),
     });
   }

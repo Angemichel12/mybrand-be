@@ -125,7 +125,7 @@ const httpUpdateBlog = async (req: Request, res: Response) => {
 const httpDeleteBlog = async (req: Request, res: Response) => {
   try {
     await Blog.deleteOne({ _id: req.params.id });
-    res.status(204).send();
+    res.status(204).send({ Message: "Blog is deleted successfully" });
   } catch {
     res.status(404).send({ error: "Blog doesn't exist!" });
   }

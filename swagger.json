@@ -10,6 +10,10 @@
     {
       "url": "http://localhost:5000/api/v1/",
       "description": "Local server"
+    },
+    {
+      "url": "https://mybrand-restapi.onrender.com/api/v1/",
+      "description": "Remote server"
     }
   ],
 
@@ -265,7 +269,7 @@
   ],
 
   "paths": {
-    "/users/": {
+    "/users/signup": {
       "post": {
         "tags": ["Authentication"],
         "summary": "User signup",
@@ -317,34 +321,6 @@
       }
     },
 
-    "/blogs/add": {
-      "post": {
-        "tags": ["Blogs"],
-        "summary": "Create blogs",
-        "description": "Create blogs",
-        "requestBody": {
-          "required": "true",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Blogs"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Enrollment created successfully!"
-          },
-          "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          }
-        }
-      }
-    },
     "/blogs/": {
       "get": {
         "tags": ["Blogs"],
@@ -356,6 +332,38 @@
           },
           "500": {
             "$ref": "#/components/responses/ServerError"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Blogs"],
+        "summary": "Create a new blog post",
+        "description": "Create a new blog post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": { "type": "string" },
+                  "description": { "type": "string" },
+                  "image": { "type": "string", "format": "binary" }
+                },
+                "required": ["title", "content", "image"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Blog created successfully!"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
           }
         }
       }
@@ -481,7 +489,7 @@
         }
       }
     },
-    "/blogs/{ID}/comments/add": {
+    "/blogs/{ID}/comments/": {
       "post": {
         "tags": ["Comments"],
         "summary": "Create comment",
@@ -525,7 +533,8 @@
       "get": {
         "tags": ["likes"],
         "summary": "like blog",
-        "description": "Get kujes of blog",
+
+        "description": "Get likes of blog",
         "parameters": [
           {
             "name": "ID",
@@ -548,7 +557,8 @@
         }
       }
     },
-    "/blogs/{ID}/likes/add": {
+
+    "/blogs/{ID}/likes": {
       "post": {
         "tags": ["likes"],
         "summary": "like blog",
@@ -583,7 +593,7 @@
             "$ref": "#/components/responses/BadRequest"
           },
           "401": {
-            "$ref": "#/components/responses/Unauthorized"
+            "$ref": "#/components/responses/UnauthorizedError"
           }
         }
       }
