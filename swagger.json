@@ -10,6 +10,10 @@
     {
       "url": "http://localhost:5000/api/v1/",
       "description": "Local server"
+    },
+    {
+      "url": "https://mybrand-restapi.onrender.com/api/v1/",
+      "description": "Remote server"
     }
   ],
 
@@ -318,6 +322,19 @@
     },
 
     "/blogs/": {
+      "get": {
+        "tags": ["Blogs"],
+        "summary": "Get blogs",
+        "description": "Get all blogs",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      },
       "post": {
         "tags": ["Blogs"],
         "summary": "Create a new blog post",
@@ -331,7 +348,7 @@
                 "properties": {
                   "title": { "type": "string" },
                   "description": { "type": "string" },
-                  "coverImage": { "type": "string", "format": "binary" }
+                  "image": { "type": "string", "format": "binary" }
                 },
                 "required": ["title", "content", "image"]
               }
@@ -347,22 +364,6 @@
           },
           "401": {
             "$ref": "#/components/responses/UnauthorizedError"
-          }
-        }
-      }
-    },
-
-    "/blogs/all/": {
-      "get": {
-        "tags": ["Blogs"],
-        "summary": "Get blogs",
-        "description": "Get all blogs",
-        "responses": {
-          "200": {
-            "description": "Success"
-          },
-          "500": {
-            "$ref": "#/components/responses/ServerError"
           }
         }
       }
@@ -532,7 +533,7 @@
       "get": {
         "tags": ["likes"],
         "summary": "like blog",
-        "description": "Get kujes of blog",
+        "description": "Get likes of blog",
         "parameters": [
           {
             "name": "ID",
@@ -555,7 +556,7 @@
         }
       }
     },
-    "/blogs/{ID}/likes/add": {
+    "/blogs/{ID}/likes": {
       "post": {
         "tags": ["likes"],
         "summary": "like blog",
@@ -590,7 +591,7 @@
             "$ref": "#/components/responses/BadRequest"
           },
           "401": {
-            "$ref": "#/components/responses/Unauthorized"
+            "$ref": "#/components/responses/UnauthorizedError"
           }
         }
       }
