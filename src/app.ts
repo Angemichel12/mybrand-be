@@ -3,7 +3,6 @@ import apiRouter from "./routes/index";
 import { v2 as cloudinary } from "cloudinary";
 import cors from "cors";
 import "dotenv/config";
-import swaggerUi from "swagger-ui-express";
 import { ConnectToDb } from "./services/mongos";
 import { getPort } from "./services/getPort";
 import { addDocumentation } from "./services/docs";

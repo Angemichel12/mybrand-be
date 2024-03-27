@@ -2,9 +2,9 @@
   "name": "mybrand-be",
   "version": "1.0.0",
   "description": "My personal brand backend project",
-  "main": "dist/index.js",
+  "main": "dist/app.js",
   "scripts": {
-    "start": "ts-node-dev ./src/index.ts",
+    "start": "node dist/app.js",
     "dev": "concurrently \"npx tsc -w\" \"nodemon src/app.ts\" ",
     "test": "jest --coverage --detectOpenHandles --verbose --runInBand",
     "build": "tsc && copyfiles -u 1 ./src/**/*.{jpg,jpeg,png,gif} dist && copyfiles -u 1 ./__test__/*.{jpg,jpeg,png,gif} dist/__test__"
