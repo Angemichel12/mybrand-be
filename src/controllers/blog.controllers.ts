@@ -1,8 +1,9 @@
-import Blog from "../models/Blog";
+// import Blog from "../models/Blog";
 import { Request, Response } from "express";
 import { JwtPayload } from "jsonwebtoken";
 import { v2 as cloudinaryV2, UploadStream } from "cloudinary";
 import streamifier from "streamifier";
+import Blog, { IBlog } from "../models/Blog";
 
 interface ExpandRequest<T = Record<string, any>> extends Request {
   UserId?: JwtPayload;
@@ -64,25 +65,25 @@ const httpCreateBlog = async (req: ExpandRequest, res: Response) => {
 };
 
 const httpGetBlog = async (req: Request, res: Response) => {
-  const blogs = await Blog.find().populate("author", "name");
-  res.status(200).json({ message: "success", data: blogs });
+  const blogs = await Blog.find()
+    .populate("author", "name")
+    .populate({
+      path: "comments",
+      select: "description -_id",
+    })
+    .populate("likes"); // populate likes with Like model
+
+  // map over blogs to add totalLikes field and include likes
+  const blogsModified = blogs.map((blog: IBlog) => {
+    const blogObject = blog.toObject();
+    return {
+      ...blogObject,
+      totalLikes: blogObject.likes.length, // calculate total likes
+    };
+  });
+
+  res.status(200).json({ message: "success", data: blogsModified });
 };
-
-// const httpPostBlog = async (req: Request, res: Response) => {
-//   if (!req.body) {
-//     res.status(400).send({ error: "Request body is missing" });
-//     return;
-//   }
-
-//   const blog = new Blog({
-//     title: req.body.title,
-//     content: req.body.content,
-//   });
-
-//   await blog.save();
-//   res.status(201).send(blog);
-// };
-
 const httpGetSingleBlog = async (req: Request, res: Response) => {
   try {
     const blog = await Blog.findOne({ _id: req.params.id });

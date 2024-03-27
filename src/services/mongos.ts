@@ -13,6 +13,7 @@ export const ConnectToDb = async (): Promise<void> => {
   if (db !== undefined) {
     try {
       await mongoose.connect(db);
+
       console.log(`[database] Connected to ${db} database successfully`);
     } catch (error) {
       console.error("[database error] MongoDB connection error:", error);

@@ -19,9 +19,15 @@ const BlogSchema: Schema = new Schema(
       type: String,
     },
     comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
-    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Like" }],
+    likes: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Like",
+      },
+    ],
   },
   { timestamps: true }
 );
 
 export default mongoose.model<IBlog>("Blog", BlogSchema);
+export { IBlog };

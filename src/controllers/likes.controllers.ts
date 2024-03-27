@@ -1,6 +1,7 @@
 import Like from "../models/likes";
 import { Request, Response } from "express";
 import { JwtPayload } from "jsonwebtoken";
+import Blog from "../models/Blog";
 
 interface ExpandRequest<T = Record<string, any>> extends Request {
   UserId?: JwtPayload;
@@ -11,10 +12,19 @@ const httpCreateLike = async (req: ExpandRequest, res: Response) => {
     const blogId = req.params.id;
     const user = req.UserId;
 
+    const blog = await Blog.findById(blogId);
+
+    if (!blog) {
+      return res.status(400).send("Blog not found");
+    }
+
     const existingLike = await Like.findOne({ user, blogId });
 
     if (existingLike) {
       await Like.findOneAndDelete({ user, blogId });
+      await Blog.findByIdAndUpdate(blogId, {
+        $pull: { likes: existingLike._id },
+      });
       res.status(200).json({
         status: 200,
         success: true,
@@ -26,7 +36,9 @@ const httpCreateLike = async (req: ExpandRequest, res: Response) => {
         blogId,
       });
 
-      await newLike.save();
+      const blogLike = await newLike.save();
+      blog.likes.push(blogLike._id);
+      await blog.save();
 
       res.status(201).json({
         status: 201,
@@ -42,7 +54,6 @@ const httpCreateLike = async (req: ExpandRequest, res: Response) => {
     });
   }
 };
-
 const httpGetLikesCount = async (req: Request, res: Response) => {
   try {
     const blogId = req.params.id;
