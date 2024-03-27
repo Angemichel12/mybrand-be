@@ -71,14 +71,12 @@ const httpGetBlog = async (req: Request, res: Response) => {
       path: "comments",
       select: "description -_id",
     })
-    .populate("likes"); // populate likes with Like model
-
-  // map over blogs to add totalLikes field and include likes
+    .populate("likes");
   const blogsModified = blogs.map((blog: IBlog) => {
     const blogObject = blog.toObject();
     return {
       ...blogObject,
-      totalLikes: blogObject.likes.length, // calculate total likes
+      totalLikes: blogObject.likes.length,
     };
   });
 
