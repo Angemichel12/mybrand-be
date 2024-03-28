@@ -1,0 +1,38 @@
+/queries:
+  post:
+    tags:
+      - Querry
+    summary: Send message.
+    description: Send message
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                example: example@ex.co
+              message:
+                type: string
+                example: I would like to talk to you
+            required:
+              - email
+              - message
+    responses:
+      "201":
+        description: comment posted successfully
+      "400":
+        description: Request body is missing
+
+  get:
+    tags:
+      - Querry
+    summary: Get querry form blog visitor.
+    security:
+      - bearerAuth: []
+    description: Retrieves all querries
+    responses:
+      "200":
+        description: querry retrieved successfully

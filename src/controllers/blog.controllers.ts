@@ -67,10 +67,7 @@ const httpCreateBlog = async (req: ExpandRequest, res: Response) => {
 const httpGetBlog = async (req: Request, res: Response) => {
   const blogs = await Blog.find()
     .populate("author", "name")
-    .populate({
-      path: "comments",
-      select: "description -_id",
-    })
+    .populate("comments")
     .populate("likes");
   const blogsModified = blogs.map((blog: IBlog) => {
     const blogObject = blog.toObject();
